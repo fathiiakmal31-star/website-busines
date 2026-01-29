@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORCIT | Premium Marketplace Semarang Barat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #D00000; 
+            --dark: #0f172a; 
+            --secondary: #64748b;
+            --soft: #f1f5f9; 
+            --white: #ffffff; 
+            --green: #10b981; 
+            --glass: rgba(255, 255, 255, 0.8);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--white); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
+        html { scroll-behavior: smooth; }
+
+        /* --- ANIMATION --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.17, 0.55, 0.55, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- NAVIGATION --- */
+        nav { 
+            position: fixed; top: 0; width: 100%; 
+            background: var(--glass); backdrop-filter: blur(15px); 
+            padding: 15px 8%; display: flex; justify-content: space-between; 
+            align-items: center; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); 
+        }
+        .nav-logo { font-size: 1.6rem; font-weight: 800; text-decoration: none; color: var(--dark); letter-spacing: -1px; }
+        .nav-logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        .cart-trigger { 
+            background: var(--dark); color: white; border: none; padding: 10px 20px; 
+            border-radius: 50px; cursor: pointer; font-weight: 700; display: flex; gap: 10px; transition: 0.3s; 
+        }
+        .cart-trigger:hover { background: var(--primary); transform: scale(1.05); }
+
+        /* --- DASHBOARD / HERO --- */
+        .dashboard-hero { 
+            padding: 160px 8% 100px; 
+            background: radial-gradient(circle at top right, #fff1f1, #ffffff);
+            display: grid; grid-template-columns: 1.2fr 1fr; gap: 50px; align-items: center;
+        }
+        .hero-text h1 { font-size: 4rem; font-weight: 800; line-height: 1; margin-bottom: 25px; letter-spacing: -2px; }
+        .hero-text p { color: var(--secondary); font-size: 1.1rem; max-width: 500px; margin-bottom: 30px; }
+        .hero-stats { display: flex; gap: 30px; }
+        .stat-item b { font-size: 1.5rem; display: block; }
+        .stat-item span { font-size: 0.8rem; color: var(--secondary); text-transform: uppercase; }
+
+        /* --- ABOUT SECTION --- */
+        .about-grid { padding: 100px 8%; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; background: var(--soft); }
+        .about-card { background: var(--white); padding: 40px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.03); }
+        .feature-list { list-style: none; margin-top: 20px; }
+        .feature-list li { margin-bottom: 15px; display: flex; gap: 12px; font-weight: 600; }
+
+        /* --- MARKET SECTION --- */
+        .market-header { padding: 80px 8% 40px; text-align: center; }
+        .search-container { 
+            max-width: 800px; margin: 30px auto; display: flex; gap: 10px; 
+            background: var(--soft); padding: 10px; border-radius: 20px;
+        }
+        .search-container input { flex: 1; border: none; background: transparent; padding: 15px; outline: none; font-size: 1rem; }
+        .search-container select { border: none; background: var(--white); padding: 0 20px; border-radius: 12px; font-weight: 600; }
+
+        .market-grid { padding: 0 8% 100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 30px; }
+        .card { 
+            background: var(--white); border-radius: 24px; padding: 18px; 
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #f1f5f9; cursor: pointer;
+            opacity: 0; transform: translateY(20px);
+        }
+        .card.show { opacity: 1; transform: translateY(0); }
+        .card:hover { transform: translateY(-12px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(208,0,0,0.08); }
+        .card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 18px; margin-bottom: 15px; }
+        .card h4 { font-weight: 700; margin-bottom: 8px; }
+        .card .price { font-weight: 800; color: var(--primary); font-size: 1.1rem; }
+
+        /* --- CONTACT SECTION --- */
+        .contact-container { padding: 100px 8%; display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; }
+        .contact-info { background: var(--dark); color: white; padding: 50px; border-radius: 40px; }
+        .contact-info h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .contact-form input, .contact-form textarea { 
+            width: 100%; padding: 20px; margin-bottom: 20px; border-radius: 15px; 
+            border: 2px solid var(--soft); background: var(--soft); outline: none; transition: 0.3s;
+        }
+        .contact-form input:focus { border-color: var(--primary); background: var(--white); }
+
+        /* --- MODAL --- */
+        .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; backdrop-filter: blur(8px); }
+        .modal-content { background: var(--white); width: 100%; max-width: 900px; border-radius: 35px; display: grid; grid-template-columns: 1fr 1.2fr; overflow: hidden; position: relative; }
+        .detail-body { padding: 50px; }
+
+        /* --- SIDEBAR --- */
+        #sidebar { position: fixed; right: -450px; top: 0; width: 450px; height: 100%; background: var(--white); z-index: 3000; transition: 0.5s; box-shadow: -20px 0 50px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        #sidebar.active { right: 0; }
+        .sidebar-header { padding: 30px; border-bottom: 1px solid var(--soft); display: flex; justify-content: space-between; align-items: center; }
+
+        @media (max-width: 992px) {
+            .dashboard-hero, .about-grid, .contact-container, .modal-content { grid-template-columns: 1fr; }
+            .hero-text h1 { font-size: 2.8rem; }
+            #sidebar { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="nav-logo">FORCIT<span>.</span></a>
+        <div class="nav-links">
+            <a href="#market">Katalog</a>
+            <a href="#about">Tentang</a>
+            <a href="#contact">Kontak</a>
+        </div>
+        <button class="cart-trigger" onclick="toggleCart()">
+            🛒 <span id="cart-count">0</span>
+        </button>
+    </nav>
+
+    <section class="dashboard-hero">
+        <div class="hero-text reveal">
+            <h1>Pasar <span style="color:var(--primary)">Jujur</span> & Transparan.</h1>
+            <p>Destinasi terpercaya di Semarang Barat untuk produk premium terverifikasi. Kami membuka semua detail tanpa ada yang disembunyikan.</p>
+            <div class="hero-stats">
+                <div class="stat-item"><b>200+</b><span>Barang Ready</span></div>
+                <div class="stat-item"><b>100%</b><span>Verified</span></div>
+                <div class="stat-item"><b>Semarang</b><span>Lokasi Kami</span></div>
+            </div>
+        </div>
+        <div class="hero-image reveal" style="text-align: right;">
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800" style="width: 100%; border-radius: 40px; transform: rotate(2deg); box-shadow: 0 30px 60px rgba(0,0,0,0.1);">
+        </div>
+    </section>
+
+    <section id="about" class="about-grid">
+        <div class="reveal">
+            <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Berbelanja Tanpa <br><span style="color:var(--primary)">Rasa Khawatir.</span></h2>
+            <p>FORCIT hadir di Semarang Barat sebagai solusi jual beli yang mengedepankan integritas. Setiap unit yang masuk ke katalog kami melalui inspeksi 20 titik.</p>
+        </div>
+        <div class="about-card reveal">
+            <h3>Standar Layanan Kami:</h3>
+            <ul class="feature-list">
+                <li>✅ Deskripsi Minus Sangat Detail</li>
+                <li>✅ Foto Asli (Bukan Hasil Download)</li>
+                <li>✅ COD Area Semarang Barat</li>
+                <li>✅ Garansi Kepuasan Pelanggan</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="market" class="market-header">
+        <div class="reveal">
+            <h2 style="font-size: 2.5rem;">Katalog Premium Kami</h2>
+            <p style="color:var(--secondary)">Cari dan temukan barang impian Anda hari ini.</p>
+        </div>
+        <div class="search-container reveal">
+            <input type="text" id="searchInput" placeholder="Cari gadget, kamera, atau fashion..." onkeyup="processFilters()">
+            <select id="priceSort" onchange="processFilters()">
+                <option value="new">Terbaru</option>
+                <option value="low">Harga Terendah</option>
+                <option value="high">Harga Tertinggi</option>
+            </select>
+        </div>
+    </section>
+
+    <main class="market-grid" id="productGrid"></main>
+
+    <section id="contact" class="contact-container">
+        <div class="contact-info reveal">
+            <h2>Hubungi <br>Admin Kami.</h2>
+            <p style="margin-bottom: 40px; opacity: 0.8;">Ada pertanyaan mengenai unit atau ingin janji temu di Semarang Barat?</p>
+            <div style="margin-bottom: 20px;">
+                <p>📍 <b>Alamat Kami:</b></p>
+                <p>Krapyak, Semarang Barat, Jawa Tengah.</p>
+            </div>
+            <div>
+                <p>📞 <b>WhatsApp:</b></p>
+                <p>+62 896 5359 6833</p>
+            </div>
+        </div>
+        <div class="contact-form reveal">
+            <form onsubmit="event.preventDefault(); alert('Terima kasih, pesan Anda terkirim!');">
+                <input type="text" placeholder="Nama Lengkap" required>
+                <input type="email" placeholder="Alamat Email" required>
+                <textarea rows="5" placeholder="Apa yang ingin Anda tanyakan?" required></textarea>
+                <button class="cart-trigger" style="width:100%; justify-content:center; padding:20px;">KIRIM PESAN</button>
+            </form>
+        </div>
+    </section>
+
+    <footer style="padding: 50px 8%; background: var(--dark); color: white; text-align: center;">
+        <p>© 2026 FORCIT Premium Marketplace. Semarang Barat, Jawa Tengah.</p>
+    </footer>
+
+    <div class="modal" id="modal" onclick="closeModal()">
+        <div class="modal-content" id="modalBody" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <h3>Keranjang</h3>
+            <button onclick="toggleCart()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">×</button>
+        </div>
+        <div id="cartItems" style="flex:1; padding:30px; overflow-y:auto;"></div>
+        <div style="padding: 30px; border-top: 1px solid var(--soft);">
+            <div style="display:flex; justify-content:space-between; font-weight:800; margin-bottom:20px; font-size:1.2rem;">
+                <span>Total:</span> <span id="totalPrice" style="color:var(--primary)">Rp 0</span>
+            </div>
+            <button onclick="checkout()" style="width:100%; padding:20px; border-radius:15px; border:none; background:var(--green); color:white; font-weight:800; cursor:pointer; transition: 0.3s;">PESAN VIA WHATSAPP</button>
+        </div>
+    </div>
+
+    <script>
+        // DATA GENERATOR (200 PRODUCTS)
+        const products = [];
+        const cats = ["Gadget", "Photography", "Wearables", "Computing"];
+        const brands = ["Sony", "Apple", "Fujifilm", "Samsung", "Logitech", "Asus"];
+        
+        for (let i = 1; i <= 200; i++) {
+            const brand = brands[i % brands.length];
+            const cat = cats[i % cats.length];
+            const price = (Math.floor(Math.random() * 120) + 10) * 100000;
+            
+            products.push({
+                id: i,
+                name: `${brand} ${cat} Alpha-${i}x`,
+                price: price,
+                img: `https://picsum.photos/seed/${i+50}/600/600`,
+                condition: i % 4 === 0 ? "Like New (99%)" : "Excellent (95%)",
+                completeness: i % 2 === 0 ? "Fullset Box" : "Unit & Charger",
+                minus: i % 5 === 0 ? "No Minus (Mulus)" : "Lecet halus pemakaian di bezel.",
+                warranty: "Garansi Toko 14 Hari"
+            });
+        }
+
+        function renderGrid(data) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = data.map((p, idx) => `
+                <div class="card" onclick="openDetail(${products.indexOf(p)})" style="transition-delay: ${(idx % 12) * 0.05}s">
+                    <img src="${p.img}" loading="lazy">
+                    <h4>${p.name}</h4>
+                    <p class="price">Rp ${p.price.toLocaleString()}</p>
+                </div>
+            `).join('');
+            setTimeout(() => document.querySelectorAll('.card').forEach(c => c.classList.add('show')), 100);
+        }
+
+        function openDetail(i) {
+            const p = products[i];
+            document.getElementById('modalBody').innerHTML = `
+                <div style="background: url('${p.img}') center/cover;"></div>
+                <div class="detail-body">
+                    <button onclick="closeModal()" style="position:absolute; top:30px; right:30px; border:none; background:var(--soft); width:40px; height:40px; border-radius:50%; cursor:pointer;">×</button>
+                    <small style="color:var(--primary); font-weight:800; text-transform:uppercase;">Verified Item</small>
+                    <h2 style="font-size:2rem; margin:10px 0;">${p.name}</h2>
+                    <p class="price" style="font-size:1.8rem; margin-bottom:30px;">Rp ${p.price.toLocaleString()}</p>
+                    
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:30px;">
+                        <div style="background:var(--soft); padding:15px; border-radius:15px;">
+                            <small>Kondisi</small><br><b>${p.condition}</b>
+                        </div>
+                        <div style="background:var(--soft); padding:15px; border-radius:15px;">
+                            <small>Kelengkapan</small><br><b>${p.completeness}</b>
+                        </div>
+                    </div>
+
+                    <p style="margin-bottom:30px; color:var(--secondary);"><b>Detail Kondisi:</b><br>${p.minus}</p>
+                    
+                    <button class="cart-trigger" style="width:100%; justify-content:center; padding:20px;" onclick="addToCart(${i}); closeModal()">TAMBAH KE KERANJANG</button>
+                </div>
+            `;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        let cart = [];
+        function addToCart(i) {
+            cart.push(products[i]);
+            updateCart();
+            toggleCart();
+        }
+
+        function updateCart() {
+            document.getElementById('cart-count').innerText = cart.length;
+            let total = 0;
+            document.getElementById('cartItems').innerHTML = cart.map((p, idx) => {
+                total += p.price;
+                return `
+                    <div style="display:flex; gap:15px; margin-bottom:20px; align-items:center;">
+                        <img src="${p.img}" style="width:70px; height:70px; border-radius:15px; object-fit:cover;">
+                        <div style="flex:1;">
+                            <h5 style="margin:0">${p.name}</h5>
+                            <b>Rp ${p.price.toLocaleString()}</b>
+                        </div>
+                        <button onclick="cart.splice(${idx},1); updateCart()" style="border:none; color:red; cursor:pointer; background:none;">🗑️</button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('totalPrice').innerText = 'Rp ' + total.toLocaleString();
+        }
+
+        function processFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const sort = document.getElementById('priceSort').value;
+            let filtered = products.filter(p => p.name.toLowerCase().includes(search));
+            if (sort === "low") filtered.sort((a,b) => a.price - b.price);
+            if (sort === "high") filtered.sort((a,b) => b.price - a.price);
+            renderGrid(filtered);
+        }
+
+        function toggleCart() { document.getElementById('sidebar').classList.toggle('active'); }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        
+        function checkout() {
+            const num = "6289653596833";
+            const text = encodeURIComponent(`Halo FORCIT Admin,\nSaya ingin memesan:\n${cart.map(p => `- ${p.name}`).join('\n')}\n\nTotal: ${document.getElementById('totalPrice').innerText}\n(Semarang Barat)`);
+            window.open(`https://wa.me/${num}?text=${text}`, '_blank');
+        }
+
+        // INIT
+        window.onload = () => {
+            renderGrid(products);
+            const obs = new IntersectionObserver((es) => es.forEach(e => e.isIntersecting && e.target.classList.add('active')), {threshold: 0.1});
+            document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        };
+    </script>
+</body>
+</html>
